@@ -81,8 +81,6 @@ light_volumetric_fog_energy = 0.0
 omni_range = 20.0
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("up_vector_display", "camera_pivot", "camera")]
-axis_lock_angular_x = true
-axis_lock_angular_y = true
 script = ExtResource("4_o1gjd")
 up_vector_display = NodePath("Control/Label")
 camera_pivot = NodePath("Camera_Pivot")
