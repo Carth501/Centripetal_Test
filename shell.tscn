@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dpgeqinvtqjng"]
+[gd_scene load_steps=20 format=3 uid="uid://dpgeqinvtqjng"]
 
 [ext_resource type="Texture2D" uid="uid://ch32j82clvie2" path="res://textures/rock_surface/rock_surface_diff_4k.png" id="1_clc1y"]
 [ext_resource type="Texture2D" uid="uid://bgdawrqjbbgee" path="res://textures/rock_surface/rock_surface_nor_gl_4k.png" id="2_1ca5e"]
@@ -17,6 +17,20 @@ normal_texture = ExtResource("2_1ca5e")
 [sub_resource type="BoxShape3D" id="BoxShape3D_82xh2"]
 size = Vector3(16, 16, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fnlsx"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.270588)
+
+[sub_resource type="SphereMesh" id="SphereMesh_lru0m"]
+material = SubResource("StandardMaterial3D_fnlsx")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0pwvp"]
+transparency = 1
+albedo_color = Color(1, 0.639216, 0.482353, 0.372549)
+
+[sub_resource type="SphereMesh" id="SphereMesh_mb5y3"]
+material = SubResource("StandardMaterial3D_0pwvp")
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rq1hf"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ayv3a"]
@@ -28,7 +42,7 @@ albedo_color = Color(0.172549, 1, 1, 1)
 material = SubResource("StandardMaterial3D_42s87")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dgxe8"]
-albedo_color = Color(0.341176, 0.886275, 0.34902, 1)
+albedo_color = Color(0.341176, 0.886275, 0.34902, 0.686275)
 
 [sub_resource type="BoxMesh" id="BoxMesh_x0rfs"]
 material = SubResource("StandardMaterial3D_dgxe8")
@@ -73,6 +87,9 @@ shape = SubResource("BoxShape3D_82xh2")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.92762, -7.02899)
 omni_range = 20.0
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="OmniLight3D"]
+mesh = SubResource("SphereMesh_lru0m")
+
 [node name="OmniLight3D2" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.289968, 9.53792)
 light_color = Color(0.933333, 0.662745, 0.580392, 1)
@@ -80,11 +97,14 @@ light_energy = 7.155
 light_volumetric_fog_energy = 0.0
 omni_range = 20.0
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="OmniLight3D2"]
+mesh = SubResource("SphereMesh_mb5y3")
+
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("up_vector_display", "camera_pivot", "camera")]
 script = ExtResource("4_o1gjd")
 up_vector_display = NodePath("Control/Label")
-camera_pivot = NodePath("Camera_Pivot")
-camera = NodePath("Camera_Pivot/Camera3D")
+camera_pivot = NodePath("CameraPivot")
+camera = NodePath("CameraPivot/Camera3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
 shape = SubResource("CapsuleShape3D_rq1hf")
@@ -105,20 +125,23 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="Camera_Pivot" type="Node3D" parent="CharacterBody3D"]
+[node name="CameraPivot" type="Node3D" parent="CharacterBody3D"]
 
-[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/Camera_Pivot"]
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/CameraPivot"]
 current = true
 far = 200.0
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="CharacterBody3D/Camera_Pivot/Camera3D"]
+[node name="CameraDirection" type="MeshInstance3D" parent="CharacterBody3D/CameraPivot/Camera3D"]
 transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0.000255972, 0, -0.259726)
+visible = false
 mesh = SubResource("BoxMesh_8rqm2")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="CharacterBody3D/Camera_Pivot"]
+[node name="CameraPivotDirection" type="MeshInstance3D" parent="CharacterBody3D/CameraPivot"]
 transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 0, 0, -0.275)
+visible = false
 mesh = SubResource("BoxMesh_x0rfs")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="CharacterBody3D"]
+[node name="CharacterDirection" type="MeshInstance3D" parent="CharacterBody3D"]
 transform = Transform3D(0.03, 0, 0, 0, 0.03, 0, 0, 0, 0.03, 0, 0, -0.3)
+visible = false
 mesh = SubResource("BoxMesh_el2v3")
