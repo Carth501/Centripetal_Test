@@ -57,7 +57,6 @@ material = SubResource("StandardMaterial3D_wet60")
 
 [node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
 physics_material_override = SubResource("PhysicsMaterial_lv7v2")
-sync_to_physics = false
 
 [node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="AnimatableBody3D"]
 depth = 32.0

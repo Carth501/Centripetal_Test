@@ -3,8 +3,9 @@ extends CharacterBody3D
 @export var up_vector_display : Label
 @export var camera_pivot : Node3D
 @export var camera : Camera3D
-var speed := 5.0
-var jump_speed := 5.0
+@export var angular_velocity : float = 1.826
+var speed := 2.0
+var jump_speed := 2.0
 var mouse_sensitivity := 0.002
 
 # This project assumes that the axis of rotation is the z axis.
@@ -25,7 +26,7 @@ func _physics_process(delta):
 	# the character body technically always faces along the long axis.
 	set_rotation(Vector3(0, 0, angle + deg_to_rad(90)))
 	apply_controls()
-	apply_subjective_gravity(up_vector, delta)
+	apply_centripetal_acceleration(delta)
 	up_vector_display.text += str("\nis_on_floor ", is_on_floor())
 	move_and_slide()
 
@@ -54,12 +55,28 @@ func apply_controls():
 	else:
 		up_vector_display.text += str("\n", Vector3.ZERO)
 
-func apply_subjective_gravity(up : Vector3, delta : float):
-	var subjective_gravity = -up * delta
-	up_vector_display.text += str("\n", subjective_gravity)
+func apply_centripetal_acceleration(delta : float):
+	var rotation_vector = calculate_centripetal()
+	var centr_acc = Vector3(0, 1, 0) * basis * delta
+	up_vector_display.text += str("\n", centr_acc)
 	# we only care about the x and y, because z should always be zero anyway
-	velocity.y += subjective_gravity.y
-	velocity.x += subjective_gravity.x
+	velocity.y += centr_acc.y
+	velocity.x += centr_acc.x
+
+# calculate cent. acc. based on the speed the character is moving with or against spin
+func calculate_centripetal() -> Vector2:
+	var relative_position = position * basis
+	var absolute_2D_velocity = Vector2(velocity.x, velocity.y)
+	var absolute_2D_position = Vector2(position.x, position.y)
+	up_vector_display.text += str("\n", "absolute_2D_position: ", absolute_2D_position)
+	var angle = absolute_2D_position.angle()
+	up_vector_display.text += str("\n", "angle: ", angle)
+	var rotated_vector = absolute_2D_velocity.rotated(angle)
+	up_vector_display.text += str("\n", "rotated_vector: ", rotated_vector)
+	var tangential_velocity = angular_velocity + rotated_vector.x
+	up_vector_display.text += str("\n", "tangential_velocity: ", tangential_velocity)
+	var acceleration = pow(tangential_velocity, 2) / relative_position.y
+	return rotated_vector
 
 func jump():
 	# using the camera piviot basis or this characterbody basis is identical
