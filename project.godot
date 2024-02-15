@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Corolis Test"
+config/name="Static Centripetal Test"
 run/main_scene="res://shell.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
